@@ -1,29 +1,60 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage = () => {
-  // State for handling user input
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const [auth, setAuth] = useAuth();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
-    if (!email || !password) {
-      setError("Both fields are required.");
+    if (!formData.email || !formData.password) {
+      setError("All fields are required.");
       return;
     }
 
-    setError("");
-    // Simulate login logic (Replace with your actual logic, e.g., API call)
-    console.log("Email:", email);
-    console.log("Password:", password);
+    try {
+      const response = await axios.post(
+        "http://localhost:5972/api/auth/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+        { withCredentials: true }
+      );
 
-    // Clear form after successful submission
-    setEmail("");
-    setPassword("");
+      if (response.data.Success) {
+        // Save auth data to context and localStorage
+        setAuth({
+          user: response.data.data,
+          authToken: response.data.authToken,
+        });
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({
+            user: response.data.data,
+            authToken: response.data.authToken,
+          })
+        );
+        setError("");
+        navigate("/");
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Login failed. Please try again.");
+    }
   };
 
   return (
@@ -49,10 +80,12 @@ const LoginPage = () => {
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Enter your email"
+              required
             />
           </div>
 
@@ -67,10 +100,12 @@ const LoginPage = () => {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Enter your password"
+              required
             />
           </div>
 
@@ -83,10 +118,10 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="text-sm text-gray-600 text-center mt-4">
-          Do not have an account?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-500 hover:underline">
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FaShoppingCart, FaUser, FaSearch, FaHeart } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext';
 
 const HeaderLinksIcons = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [auth, setAuth] = useAuth();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -52,24 +54,59 @@ const HeaderLinksIcons = () => {
             onMouseLeave={closeDropdown}
           >
             <ul className="py-1 text-gray-700">
-              <li>
-                <Link
-                  to="/login"
-                  className="block px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
-                  onClick={closeDropdown}
-                >
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/register"
-                  className="block px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
-                  onClick={closeDropdown}
-                >
-                  Register
-                </Link>
-              </li>
+              {!auth?.user ? (
+                <>
+                  <li>
+                    <Link
+                      to="/login"
+                      className="block px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
+                      onClick={closeDropdown}
+                    >
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/register"
+                      className="block px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
+                      onClick={closeDropdown}
+                    >
+                      Register
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <span className="block px-4 py-2 text-gray-800 font-medium">
+                      Welcome, {auth?.user.username}
+                    </span>
+                  </li>
+                  <li>
+                    <Link
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      // onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
+                    >
+                      My Orders
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      // onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         )}

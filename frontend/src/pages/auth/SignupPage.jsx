@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -9,43 +11,45 @@ const SignupPage = () => {
   });
 
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Basic validation
     const { name, email, password, confirmPassword } = formData;
     if (!name || !email || !password || !confirmPassword) {
       setError("All fields are required.");
-      setSuccess("");
       return;
     }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
-      setSuccess("");
       return;
     }
 
-    setError("");
-    setSuccess("Account created successfully!");
-    console.log("Signup Data:", formData);
+    try {
+      const response = await axios.post("http://localhost:5972/api/auth/register", {
+        username: name,
+        email,
+        password,
+      },
+      {withCredentials: true}
+    );
 
-    // Clear form after successful submission
-    setFormData({
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
+      if (response.data.Success) {
+        setError("");
+        // Redirect to login page after successful registration
+        navigate("/login");
+      }
+    } catch (error) {
+      setError(error.response?.data?.message || "Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -57,11 +61,6 @@ const SignupPage = () => {
         {error && (
           <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
             {error}
-          </div>
-        )}
-        {success && (
-          <div className="bg-green-100 text-green-700 p-2 rounded mb-4">
-            {success}
           </div>
         )}
         <form onSubmit={handleSubmit}>
@@ -81,6 +80,7 @@ const SignupPage = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Enter your full name"
+              required
             />
           </div>
 
@@ -100,6 +100,7 @@ const SignupPage = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Enter your email"
+              required
             />
           </div>
 
@@ -119,6 +120,7 @@ const SignupPage = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Enter your password"
+              required
             />
           </div>
 
@@ -138,10 +140,10 @@ const SignupPage = () => {
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mt-1"
               placeholder="Confirm your password"
+              required
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-200"
