@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import slugify from "slugify";
 
 export const addProduct = async (req, res) => {
   try {
@@ -26,38 +27,59 @@ export const addProduct = async (req, res) => {
   }
 };
 
+// export const getAllProducts = async (req, res) => {
+//   try {
+//     const {
+//       page = 1,
+//       limit = 10,
+//       category,
+//       subcategory,
+//       metalType,
+//     } = req.query;
+//     const query = {};
+
+//     if (category) query.category = category;
+//     if (subcategory) query.subcategory = subcategory;
+//     if (metalType) query.metalType = metalType;
+
+//     const products = await Product.find(query)
+//       .populate("category")
+//       .populate("subcategory")
+//       .limit(limit * 1)
+//       .skip((page - 1) * limit);
+
+//     const count = await Product.countDocuments(query);
+
+//     res.json({
+//       products,
+//       totalPages: Math.ceil(count / limit),
+//       currentPage: page,
+//     });
+//   } catch (error) {
+//     res.status(500).json({ message: "Server error", error: error.message });
+//   }
+// };
+
 export const getAllProducts = async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
-      category,
-      subcategory,
-      metalType,
-    } = req.query;
-    const query = {};
-
-    if (category) query.category = category;
-    if (subcategory) query.subcategory = subcategory;
-    if (metalType) query.metalType = metalType;
-
-    const products = await Product.find(query)
-      .populate("category")
-      .populate("subcategory")
-      .limit(limit * 1)
-      .skip((page - 1) * limit);
-
-    const count = await Product.countDocuments(query);
-
-    res.json({
-      products,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-    });
+    const products = await Product.find({}).populate("category").limit(10).sort({createdAt: -1})
+    console.log("products : ", products)
+    res.status(200).json({
+      success: true,
+      message: "All Products.",
+      products
+    })
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.log(error)
+    res.status(500).json({
+      success: true,
+      message: "Failed to get all Products.",
+      error: error.message
+    })
   }
-};
+}
+
+
 
 export const getProduct = async (req, res) => {
   try {

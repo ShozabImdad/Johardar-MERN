@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext'
 import { Toaster } from 'react-hot-toast'
 import Dashboard from './pages/users/Dashboard'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import AllProducts from './pages/AllProducts'
 
 const App = () => {
   return (
@@ -23,6 +24,8 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/all-products" element={<AllProducts />} />
+
         
         {/* Protected User Routes */}
         <Route path="/user" element={<PrivateRoute />}>
