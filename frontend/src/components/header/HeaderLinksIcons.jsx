@@ -39,7 +39,7 @@ const HeaderLinksIcons = () => {
         });
         localStorage.removeItem("auth");
         toast.success("Logged out successfully");
-        navigate("/login");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
