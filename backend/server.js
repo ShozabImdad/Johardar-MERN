@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Routes
+app.use("/uploads", express.static("images"));
 app.use("/api/users", userRoutes);
 app.use("/api/products/", productRoutes)
 app.use("/api/auth", authRoues)

@@ -2,32 +2,19 @@ import Product from "../models/Product.js";
 
 export const addProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      category,
-      subcategory,
-      metalType,
-      weight,
-      images,
-      stock,
-    } = req.body;
-    const product = Product.create({
-      name,
-      description,
-      price,
-      category,
-      subcategory,
-      metalType,
-      weight,
-      images,
-      stock,
-    });
+    // Extract filenames from uploaded files
+    const images = req.files.map((file) => file.filename);
 
-    res.status(200).json({
+    // Add the images array and slug to the request body
+    req.body.images = images;
+    req.body.slug = slugify(req.body.name);
+
+    // Create the product and save it to the database
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
       Success: true,
-      message: "Product Created",
+      message: "Product Created Successfully",
       data: product,
     });
   } catch (error) {
