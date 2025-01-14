@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaUser, FaSearch, FaHeart } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from "react-hot-toast";
+import axios from 'axios';
 
 const HeaderLinksIcons = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [auth, setAuth] = useAuth();
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -18,6 +21,31 @@ const HeaderLinksIcons = () => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
+
+  const handleLogout = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5972/api/auth/logout",
+        {},
+        {
+          withCredentials: true
+        }
+      );
+      
+      if (data?.Success) {
+        setAuth({
+          ...auth,
+          user: null,
+        });
+        localStorage.removeItem("auth");
+        toast.success("Logged out successfully");
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout failed");
+    }
+  };
 
   return (
     <div className="flex items-center space-x-6 relative">
@@ -90,16 +118,15 @@ const HeaderLinksIcons = () => {
                     </Link>
                   </li>
                   <li>
-                    <button
-                      // onClick={handleLogout}
+                  <Link
                       className="block w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
                     >
                       My Orders
-                    </button>
+                    </Link>
                   </li>
                   <li>
                     <button
-                      // onClick={handleLogout}
+                      onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 hover:bg-gray-100 hover:text-amber-700"
                     >
                       Logout
