@@ -108,28 +108,58 @@ export const getProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!product) {
+    const { id } = req.params;
+    const updateData = { ...req.body };
+
+    // Handle file uploads if any
+    if (req.files && req.files.length > 0) {
+      updateData.images = req.files.map(file => file.filename);
+    }
+
+    // Convert string values to appropriate types
+    if (updateData.price) updateData.price = Number(updateData.price);
+    if (updateData.weight) updateData.weight = Number(updateData.weight);
+    if (updateData.stock) updateData.stock = Number(updateData.stock);
+    if (updateData.isActive !== undefined) {
+      updateData.isActive = updateData.isActive === 'true' || updateData.isActive === true;
+    }
+    if (updateData.isFeatured !== undefined) {
+      updateData.isFeatured = updateData.isFeatured === 'true' || updateData.isFeatured === true;
+    }
+
+    // Generate slug from name if name is being updated
+    if (updateData.name) {
+      updateData.slug = slugify(updateData.name);
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { $set: updateData },
+      { 
+        new: true,
+        runValidators: true 
+      }
+    ).populate(['category', 'subcategory']);
+
+    if (!updatedProduct) {
       return res.status(404).json({
         Success: false,
         message: "Product not found",
-        data: null,
+        data: null
       });
     }
 
-    res.status(200).res.json({
+    res.status(200).json({
       Success: true,
-      message: "Product Updated",
-      data: product
-    })
+      message: "Product updated successfully",
+      data: updatedProduct
+    });
   } catch (error) {
+    console.error("Update error:", error);
     res.status(500).json({
       Success: false,
-      message: error.message,
-      data: null,
+      message: error.message || "Error updating product",
+      data: null
     });
   }
 };

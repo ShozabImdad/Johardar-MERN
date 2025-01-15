@@ -8,13 +8,7 @@ const categorySchema = new mongoose.Schema({
     slug: {
         type: String,
         required: true,
-    },
-    subcategories: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Subcategory"
-        }
-    ]
+    }
 },
 {
     timestamps: true
@@ -23,3 +17,5 @@ const categorySchema = new mongoose.Schema({
 
 
 const Category = mongoose.model("Category", categorySchema)
+
+export default Category

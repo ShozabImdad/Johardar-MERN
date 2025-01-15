@@ -22,16 +22,16 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      // required: true,
+      required: true,
     },
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subcategory",
-      // required: true,
+      required: true,
     },
     metalType: {
       type: String,
-      enum: ["gold", "silver", "platinum", "diamond"],
+      enum: ["gold", "silver", "platinum", "diamond", "N/A"],
       required: true,
     },
     purity: {
@@ -79,6 +79,10 @@ const productSchema = new mongoose.Schema(
     totalReviews: {
       type: Number,
       default: 0,
+    },
+    isFeatured: {
+      type: Boolean,
+      default: true
     },
     isActive: {
       type: Boolean,

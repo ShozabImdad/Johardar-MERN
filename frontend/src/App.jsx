@@ -13,6 +13,11 @@ import { Toaster } from 'react-hot-toast'
 import Dashboard from './pages/users/Dashboard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AllProducts from './pages/AllProducts'
+import AdminProducts from './pages/admin/AdminProducts'
+import AdminUsers from './pages/admin/AdminUsers'
+import AdminCategory from './pages/admin/AdminCategory'
+import AdminSubCategory from './pages/admin/AdminSubCategory'
+import NotFound from './pages/NotFound'
 
 const App = () => {
   return (
@@ -37,11 +42,13 @@ const App = () => {
         {/* Protected Admin Routes */}
         <Route path="/admin" element={<AdminRoute />}>
           <Route path="dashboard" element={<AdminDashboard />} />
-          {/* <Route path="products" element={<Products />} />
-          <Route path="users" element={<Users />} /> */}
+          <Route path="products" element={<AdminProducts />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="categories" element={<AdminCategory />} />
+          <Route path="subcategories" element={<AdminSubCategory />} />
         </Route>
 
-        <Route path="/*" element={<Home />} />
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </AuthProvider>
   )

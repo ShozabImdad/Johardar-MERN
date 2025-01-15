@@ -5,6 +5,8 @@ import connectDB from './config/db.js'
 import userRoutes from './routes/User.js'
 import productRoutes from './routes/Product.js'
 import authRoues from './routes/auth.js'
+import categoryRoutes from './routes/category.js'
+import subCategoryRoutes from './routes/subCategory.js'
 import cors from 'cors'
 
 // Load env vars
@@ -25,6 +27,8 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/users", userRoutes);
 app.use("/api/products/", productRoutes)
 app.use("/api/auth", authRoues)
+app.use("/api/categories", categoryRoutes)
+app.use("/api/subcategories", subCategoryRoutes)
 
 //Error Handling Middleware
 
