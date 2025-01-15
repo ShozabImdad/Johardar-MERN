@@ -1,5 +1,6 @@
 import React from "react";
 // import video from '../../assets/Home-main.mov'
+import { Link } from "react-router-dom";
 
 const Hero = ({ myVideo }) => {
   return (
@@ -26,9 +27,9 @@ const Hero = ({ myVideo }) => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
             tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
           </p>
-          <button className="px-6 py-3 border border-white text-white uppercase hover:bg-white hover:text-black transition">
-            Shop Now
-          </button>
+          <Link to={"/all-products"} className="px-6 py-3 border border-white text-white uppercase hover:bg-white hover:text-black transition">
+            Explore
+          </Link>
         </div>
       </div>
     </section>
