@@ -15,7 +15,6 @@ const Home = () => {
       <Trending />
       <BestSelling />
       <WhyChoseUs />
-      <h1 className='text-3xl font-bold underline'>Homepage</h1>
       <Footer />
     </div>
   )

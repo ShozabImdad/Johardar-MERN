@@ -67,26 +67,28 @@ const AdminCategory = () => {
 
   // Delete category
   const handleDeleteCategory = async (categoryId) => {
-    try {
-      const { data } = await axios.delete(
-        `http://localhost:5972/api/categories/${categoryId}`,
-        {
-          withCredentials: true,
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      try {
+        const { data } = await axios.delete(
+          `http://localhost:5972/api/categories/delete/${categoryId}`,
+          {
+            withCredentials: true,
+          }
+        );
+        if (data?.Success) {
+          toast.success("Category deleted successfully");
+          getAllCategories();
         }
-      );
-      if (data?.Success) {
-        toast.success("Category deleted successfully");
-        getAllCategories();
+      } catch (error) {
+        console.log(error);
+        toast.error(error.response?.data?.message || "Error deleting category");
       }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error deleting category");
     }
   };
 
   // Edit category
   const handleEditClick = (category) => {
-    setEditingCategory(category);
+    setEditingCategory({ ...category });
     setIsEditModalOpen(true);
   };
 
@@ -94,7 +96,7 @@ const AdminCategory = () => {
     e.preventDefault();
     try {
       const { data } = await axios.put(
-        `http://localhost:5972/api/category/${editingCategory._id}`,
+        `http://localhost:5972/api/categories/${editingCategory._id}`,
         {
           name: editingCategory.name,
         },
@@ -106,12 +108,20 @@ const AdminCategory = () => {
       if (data?.Success) {
         toast.success("Category updated successfully");
         setIsEditModalOpen(false);
+        setEditingCategory(null);
         getAllCategories();
       }
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || "Error updating category");
     }
+  };
+
+  const handleEditInputChange = (e) => {
+    setEditingCategory({
+      ...editingCategory,
+      name: e.target.value,
+    });
   };
 
   return (
@@ -235,20 +245,18 @@ const AdminCategory = () => {
                       <input
                         type="text"
                         required
-                        value={editingCategory.name}
-                        onChange={(e) =>
-                          setEditingCategory({
-                            ...editingCategory,
-                            name: e.target.value,
-                          })
-                        }
+                        value={editingCategory?.name || ''}
+                        onChange={handleEditInputChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
                     <div className="flex justify-end space-x-3">
                       <button
                         type="button"
-                        onClick={() => setIsEditModalOpen(false)}
+                        onClick={() => {
+                          setIsEditModalOpen(false);
+                          setEditingCategory(null);
+                        }}
                         className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                       >
                         Cancel
