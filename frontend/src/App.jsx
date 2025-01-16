@@ -18,6 +18,8 @@ import AdminUsers from './pages/admin/AdminUsers'
 import AdminCategory from './pages/admin/AdminCategory'
 import AdminSubCategory from './pages/admin/AdminSubCategory'
 import NotFound from './pages/NotFound'
+import ProductByCategory from './pages/ProductByCategory'
+import ProductBySubCategory from './pages/ProductBySubCategory'
 
 const App = () => {
   return (
@@ -30,6 +32,8 @@ const App = () => {
         <Route path="/register" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/all-products" element={<AllProducts />} />
+        <Route path="/categories/:slug/:subSlug" element={<ProductBySubCategory />} />
+        <Route path="/categories/:slug" element={<ProductByCategory />} />
 
         
         {/* Protected User Routes */}

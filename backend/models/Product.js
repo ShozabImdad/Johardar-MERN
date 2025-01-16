@@ -54,9 +54,10 @@ const productSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
-    soldCount: {
+    sold: {
       type: Number,
-      default: 0
+      default: 0,
+      min: 0
     },
     tags: [
       {
