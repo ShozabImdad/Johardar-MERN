@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +12,9 @@ const SignupPage = () => {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,7 +24,6 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     const { name, email, password, confirmPassword } = formData;
     if (!name || !email || !password || !confirmPassword) {
       setError("All fields are required.");
@@ -34,18 +36,19 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5972/api/auth/register", {
-        username: name,
-        email,
-        password,
-      },
-      {withCredentials: true}
-    );
+      const response = await axios.post(
+        "http://localhost:5972/api/auth/register",
+        {
+          username: name,
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       if (response.data.Success) {
         setError("");
-        // Redirect to login page after successful registration
-        navigate("/login");
+        navigate("/login", { state: { from } });
       }
     } catch (error) {
       setError(error.response?.data?.message || "Registration failed. Please try again.");

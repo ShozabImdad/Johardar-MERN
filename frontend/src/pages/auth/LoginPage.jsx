@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
@@ -10,7 +10,10 @@ const LoginPage = () => {
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const [auth, setAuth] = useAuth();
+
+  const from = location.state?.from?.pathname || '/';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,7 +23,6 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setError("All fields are required.");
       return;
@@ -37,7 +39,6 @@ const LoginPage = () => {
       );
 
       if (response.data.Success) {
-        // Save auth data to context and localStorage
         setAuth({
           user: response.data.data,
           authToken: response.data.authToken,
@@ -50,7 +51,12 @@ const LoginPage = () => {
           })
         );
         setError("");
-        navigate("/");
+
+        if (response.data.data.role === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else {
+          navigate(from, { replace: true });
+        }
       }
     } catch (error) {
       setError(error.response?.data?.message || "Login failed. Please try again.");

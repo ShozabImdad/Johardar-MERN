@@ -99,7 +99,7 @@ const AllProducts = () => {
               <p className="text-lg font-medium text-gray-600">
                 ${selectedProduct.price.toFixed(2)}
               </p>
-              <p className="mt-4 text-gray-700">{selectedProduct.description}</p>
+              <p className="mt-4 text-gray-700">Description: {selectedProduct.description}</p>
               <p className="mt-2 text-sm text-gray-500">
                 Category: {selectedProduct.category?.name || "N/A"}
               </p>

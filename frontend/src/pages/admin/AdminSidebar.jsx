@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   FaChevronLeft, 
   FaChevronRight, 
@@ -8,10 +8,46 @@ import {
   FaShoppingCart, 
   FaUsers, 
   FaTags,
-  FaListUl
+  FaListUl,
+  FaSignOutAlt
 } from 'react-icons/fa';
 
+import {useAuth} from '../../context/AuthContext'
+import toast from 'react-hot-toast';
+import axios from 'axios';
+
+
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
+
+    const [auth, setAuth] = useAuth()
+    const navigate = useNavigate()
+
+
+    const handleLogout = async () => {
+    try {
+      const { data } = await axios.post(
+        "http://localhost:5972/api/auth/logout",
+        {},
+        {
+          withCredentials: true
+        }
+      );
+      
+      if (data?.Success) {
+        setAuth({
+          ...auth,
+          user: null,
+        });
+        localStorage.removeItem("auth");
+        toast.success("Logged out successfully");
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Logout failed");
+    }
+  };
+
   return (
     <div
       className={`fixed left-0 h-screen bg-gray-800 text-white transition-all duration-300 ${
@@ -77,6 +113,13 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
           >
             <FaUsers className="text-xl" />
             <span className={`${!isOpen && 'hidden'}`}>Users</span>
+          </Link>
+          <Link
+            onClick={handleLogout}
+            className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            <FaSignOutAlt className="text-xl" />
+            <span className={`${!isOpen && 'hidden'}`}>Log Out</span>
           </Link>
         </nav>
       </div>

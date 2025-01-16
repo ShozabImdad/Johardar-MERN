@@ -1,4 +1,5 @@
 import React from "react";
+import {FaHeart, FaShoppingCart, FaEye} from 'react-icons/fa'
 
 const ProductCard = ({ product, onQuickView }) => {
   return (
@@ -17,66 +18,17 @@ const ProductCard = ({ product, onQuickView }) => {
             onClick={onQuickView}
             className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
+            <FaEye className="text-xl text-gray-500 hover:text-amber-700" />
           </button>
 
           {/* Add to Wishlist Button */}
           <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 8a4 4 0 018-0 4 4 0 018 0c0 4.418-4 8-8 8s-8-3.582-8-8z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.21 13.55l.79.7-.79-.7z"
-              />
-            </svg>
+            <FaHeart className="text-xl text-gray-500 hover:text-amber-700" />
           </button>
 
           {/* Add to Cart Button */}
           <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-100">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 3h2l3.6 7.59M16 16H8a4 4 0 01-4-4M6 21a2 2 0 104 0m7-3a3 3 0 11-2-1h2zm5.01-.5l1.25 2.5"
-              />
-            </svg>
+            <FaShoppingCart className="text-xl text-gray-500 hover:text-amber-700"/>
           </button>
         </div>
       </div>
